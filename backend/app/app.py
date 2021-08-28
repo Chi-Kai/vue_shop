@@ -1,8 +1,9 @@
 import os
-
-from flask import Flask, g, request
+from flask import Flask, g, request, jsonify
+from flask.helpers import make_response
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.ext.serializer import loads, dumps
 
 from models import user
 from models.user import User
@@ -29,15 +30,14 @@ db.init_app(app)
 user.init_app(app)
 
 
+@app.route('/register', methods=['GET', 'POST'])
 def register():
     json = request.get_json()
     email = json['user'] + '@email.com'
     user = User(email=email, user=json['user'], password=json['password'])
     db.session.add(user)
     db.session.commit()
-    print('OK')
-    return 'ok'
-
+    return 'OK'
 
 @app.route('/login', methods=['GET',
                               'POST'])  # 在出现一系列问题，如Notype 报错等，在向数据库输入数据后消失
@@ -52,3 +52,8 @@ def login():
             token = u.generate_auth_token(expiration=3600)
             return token
     return "None"
+
+
+@app.route('/user', methods=['GET', 'POST'])
+def userdate():
+    return jsonify(res=User.query.all())

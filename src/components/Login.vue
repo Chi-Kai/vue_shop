@@ -25,7 +25,7 @@
                    class="bt"
                    @click="login">登陆</el-button>
         <div class="url">
-          <a href="#">注册</a>
+          <a @click="register">注册</a>
           |
           <a href="#">忘记密码</a>
         </div>
@@ -71,6 +71,9 @@ export default {
         window.sessionStorage.setItem('token', res.data)
         this.$router.push('/home')
       })
+    },
+    register () {
+      this.$router.push('/register')
     }
   }
 }

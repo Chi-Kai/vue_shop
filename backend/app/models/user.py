@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from flask_sqlalchemy import SQLAlchemy
 import click
 from flask.cli import with_appcontext
@@ -7,13 +8,21 @@ from flask import current_app
 
 db = SQLAlchemy()
 
-
+@dataclass
 class User(db.Model):
+    id : int
+    user : str
+    email: str
+    tel : str
+    admin : bool
     
     id = db.Column(db.Integer, primary_key=True)
     user = db.Column(db.String(20), unique=True, index=True)
     email = db.Column(db.String(64), unique=True, index=True)
+    tel   = db.Column(db.String(64), unique=True, index=True)
     password_hash = db.Column(db.String(128))
+    admin = db.Column(db.Boolean)
+
 
     @property
     def password(self):
@@ -26,7 +35,7 @@ class User(db.Model):
     def verify_password(self, password):
         return check_password_hash(self.password_hash, password)
 
-    def generate_auth_token(self, expiration): # 产生token
+    def generate_auth_token(self, expiration):  # 产生token
         s = Serializer(current_app.config['SECRET_KEY'], expires_in=expiration)
         return s.dumps({'id': self.id}).decode('utf-8')
 
@@ -38,8 +47,6 @@ class User(db.Model):
         except:
             return None
         return User.query.get(data['id'])
-    
- 
 
 
 @click.command('init-db')
