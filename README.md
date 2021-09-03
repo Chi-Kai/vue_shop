@@ -1,6 +1,6 @@
-# vue_shop
+# vueshop
 
-## Project setup
+## 根据黑马vue课程所写的后台管理网站
 ```
 yarn install
 ```
