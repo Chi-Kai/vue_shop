@@ -142,6 +142,7 @@ export default {
 .url {
   padding: 5px;
   text-align: center !important;
+  cursor: pointer;
 }
 
 a {

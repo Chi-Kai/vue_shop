@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import CheckConstraint
 import click
 from flask.cli import with_appcontext
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -8,21 +9,22 @@ from flask import current_app
 
 db = SQLAlchemy()
 
+
 @dataclass
 class User(db.Model):
-    id : int
-    user : str
+    id: int
+    user: str
     email: str
-    tel : str
-    admin : bool
-    
+    tel: str
+    admin: str
+
     id = db.Column(db.Integer, primary_key=True)
     user = db.Column(db.String(20), unique=True, index=True)
     email = db.Column(db.String(64), unique=True, index=True)
-    tel   = db.Column(db.String(64), unique=True, index=True)
+    tel = db.Column(db.String(64), unique=True, index=True)
     password_hash = db.Column(db.String(128))
-    admin = db.Column(db.Boolean)
-
+    admin = db.Column(db.String(10),
+                      CheckConstraint("admin IN ('true','false')"))  # 检查约束
 
     @property
     def password(self):
