@@ -1,24 +1,8 @@
 # vueshop
 
 ## 根据黑马vue课程所写的后台管理网站
-```
-yarn install
-```
-
-### Compiles and hot-reloads for development
-```
-yarn serve
+## 特点是前后端分离  前端: vue-cli vue element-ui  后端: flask (后面会逐渐写go版本的后端)
 ```
 
-### Compiles and minifies for production
-```
-yarn build
-```
-
-### Lints and fixes files
-```
-yarn lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### 先启动后端backend （通过start.sh脚本启动） 
+### 前端启动命令 npm run serve
