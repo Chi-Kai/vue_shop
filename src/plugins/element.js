@@ -2,7 +2,7 @@ import Vue from 'vue'
 import {
   Button, Form, FormItem, Input, Message, Container, Main, Aside, Header,
   Avatar, Menu, Submenu, MenuItem, Breadcrumb, BreadcrumbItem, Card, Row, Col,
-  Table, TableColumn, Radio, Switch, Pagination, Dialog, MessageBox
+  Table, TableColumn, Radio, Switch, Pagination, Dialog, MessageBox, Carousel, CarouselItem, Link, Steps, Step, Select, Option
 } from 'element-ui'
 
 Vue.use(Button)
@@ -28,5 +28,13 @@ Vue.use(Radio)
 Vue.use(Switch)
 Vue.use(Pagination)
 Vue.use(Dialog)
+Vue.use(Carousel)
+Vue.use(CarouselItem)
+Vue.use(Avatar)
+Vue.use(Link)
+Vue.use(Steps)
+Vue.use(Step)
+Vue.use(Select)
+Vue.use(Option)
 Vue.prototype.$message = Message
 Vue.prototype.$confirm = MessageBox.confirm

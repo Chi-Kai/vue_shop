@@ -1,108 +1,96 @@
 <template>
-
   <el-container class="container-style">
     <el-aside :width="iscollaspe ? '65px' : '300px'">
       <el-header v-if="!iscollaspe"
                  class="aside_head"
-                 height="200px">
+                 height="60px">
         <div class="title">
           <strong> BackStage ManageMent</strong>
         </div>
-        <div class="title">
-          chikai
-        </div>
-        <div class="user">
-          <el-button type="info"
-                     icon="el-icon-switch-button"
-                     circle
-                     @click="logout"></el-button>
-        </div>
       </el-header>
-      <div class="toggle-button"
-           @click="collaspe"> ||| </div>
       <el-menu default-active="2"
                class="el-menu-vertical-demo"
                unique-opened
                background-color="#545c64"
                text-color="#fff"
                active-text-color="#ffd04b"
-               :collapse=' iscollaspe'
-               :collapse-transition='false'
+               :collapse=" iscollaspe"
+               :collapse-transition="false"
                router>
         <el-submenu index="1">
           <template slot="title">
-            <i class="el-icon-user-solid"></i>
+            <i class="el-icon-user-solid" />
             <span>用户管理</span>
           </template>
           <el-menu-item index="/user">
             <template slot="title">
-              <i class="el-icon-s-unfold"></i>
+              <i class="el-icon-s-unfold" />
               <span>用户列表</span>
             </template>
           </el-menu-item>
         </el-submenu>
         <el-submenu index="2">
           <template slot="title">
-            <i class="el-icon-s-cooperation"></i>
+            <i class="el-icon-s-cooperation" />
             <span>权限管理</span>
           </template>
           <el-menu-item index="2-1">
             <template slot="title">
-              <i class="el-icon-s-unfold"></i>
+              <i class="el-icon-s-unfold" />
               <span>角色列表</span>
             </template>
           </el-menu-item>
           <el-menu-item index="2-2">
             <template slot="title">
-              <i class="el-icon-s-unfold"></i>
+              <i class="el-icon-s-unfold" />
               <span>权限列表</span>
             </template>
           </el-menu-item>
         </el-submenu>
         <el-submenu index="3">
           <template slot="title">
-            <i class="el-icon-s-goods"></i>
-            <span>商品管理</span>
+            <i class="el-icon-s-goods" />
+            <span>书籍管理</span>
           </template>
-          <el-menu-item index="3-1">
+          <el-menu-item index="/books">
             <template slot="title">
-              <i class="el-icon-s-unfold"></i>
-              <span>商品列表</span>
+              <i class="el-icon-s-unfold" />
+              <span>书籍列表</span>
             </template>
           </el-menu-item>
           <el-menu-item index="3-2">
             <template slot="title">
-              <i class="el-icon-s-unfold"></i>
+              <i class="el-icon-s-unfold" />
               <span>分类参数</span>
             </template>
           </el-menu-item>
           <el-menu-item index="3-3">
             <template slot="title">
-              <i class="el-icon-s-unfold"></i>
-              <span>商品分类</span>
+              <i class="el-icon-s-unfold" />
+              <span>书籍分类</span>
             </template>
           </el-menu-item>
         </el-submenu>
         <el-submenu index="4">
           <template slot="title">
-            <i class="el-icon-s-order"></i>
+            <i class="el-icon-s-order" />
             <span>订单管理</span>
           </template>
           <el-menu-item index="4-1">
             <template slot="title">
-              <i class="el-icon-s-unfold"></i>
+              <i class="el-icon-s-unfold" />
               <span>订单列表</span>
             </template>
           </el-menu-item>
         </el-submenu>
         <el-submenu index="5">
           <template slot="title">
-            <i class="el-icon-s-marketing"></i>
+            <i class="el-icon-s-marketing" />
             <span>数据统计</span>
           </template>
           <el-menu-item index="5-1">
             <template slot="title">
-              <i class="el-icon-location"></i>
+              <i class="el-icon-location" />
               <span>选项1</span>
             </template>
           </el-menu-item>
@@ -110,18 +98,31 @@
       </el-menu>
     </el-aside>
     <el-container>
-      <el-header class="left_head">Header</el-header>
+      <el-header class="el_head">
+        <div class="toggle-button"
+           @click="collaspe"> <<< </div>
+        <div class="user">
+          <div>
+            <el-button type="info"
+                       icon="el-icon-switch-button"
+                       circle
+                       @click="logout" />
+          </div>
+          <div class="avatar">
+            <el-avatar icon="el-icon-user-solid" />
+          </div>
+        </div>
+      </el-header>
       <el-main>
-        <router-view></router-view>
+        <router-view />
       </el-main>
     </el-container>
   </el-container>
-
 </template>
 
 <script>
 export default {
-  name: 'home',
+  name: 'Home',
   data () {
     return {
       iscollaspe: false
@@ -130,7 +131,7 @@ export default {
   methods: {
     logout () {
       window.sessionStorage.clear()
-      this.$router.push('/login')
+      this.$router.push('/shophome')
     },
     collaspe () {
       this.iscollaspe = !this.iscollaspe
@@ -142,13 +143,22 @@ export default {
 
 <style lang="less" scoped>
 .el-aside {
-  background-color: #1b2a3f;
+  background-color: #d7cfcf;
 }
 .el-main {
   background-color: #fff;
 }
-.left_head {
-  background-color: #212121;
+.el_head {
+  background-color: #d7cfcf;
+  display: flex;
+}
+.user {
+  margin-left: 90rem;
+  display: flex;
+  margin-top: 10px;
+}
+.user >.avatar {
+  margin-left: 10px;
 }
 .aside_head {
   background-color: #354968;
@@ -182,12 +192,13 @@ export default {
 }
 
 .toggle-button {
-  background-color: #212121;
+  
+
   color: #fff;
-  font-size: 10px;
+  font-size: 30px;
   line-height: 60px;
   text-align: center;
-  letter-spacing: 0.2;
+ 
   cursor: pointer;
 }
 </style>

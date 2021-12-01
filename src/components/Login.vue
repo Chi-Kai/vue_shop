@@ -4,26 +4,28 @@
       <div class="head_box">
         <img src="../assets/head.jpeg">
       </div>
-      <el-form label-width="0px"
+      <el-form ref="loginFormRef"
+               label-width="0px"
                class="login_form"
-               ref="loginFormRef"
-               :model='loginform'
+               :model="loginform"
                :rules="loginrules">
-        <el-form-item prop="user">
-          <el-input v-model="loginform.user"
+        <el-form-item prop="username">
+          <el-input v-model="loginform.username"
                     class="form_control"
-                    prefix-icon=" el-icon-user-solid"></el-input>
+                    prefix-icon=" el-icon-user-solid" />
         </el-form-item>
         <el-form-item prop="password">
           <el-input v-model="loginform.password"
                     class="form_control"
                     prefix-icon=" el-icon-lock "
-                    type="password"></el-input>
+                    type="password" />
         </el-form-item>
 
         <el-button type="success"
                    class="bt"
-                   @click="login">登陆</el-button>
+                   @click="login">
+          登陆
+        </el-button>
         <div class="url">
           <a @click="register">注册</a>
           |
@@ -39,12 +41,12 @@ export default {
   data () {
     return {
       loginform: {
-        user: 'admin',
-        password: '12345'
+        username: 'admin',
+        password: '123456'
       },
 
       loginrules: {
-        user: [
+        username: [
           { required: true, message: '请输入用户名', trigger: 'blur' },
           { min: 3, message: '长度在 3 到 5 个字符', trigger: 'blur' }
         ],
@@ -59,17 +61,19 @@ export default {
     login () {
       this.$refs.loginFormRef.validate(async valid => {
         if (!valid) return
-        /*
-        const { status: res } = await this.$http.post('login', this.loginform)
-        if (res !== 200) this.$message.error('登陆失败!')  //为什么只能收到200的状态呢？
-        this.$message.success('登陆成功！')
-       */
-        const res = await this.$http.post('login', this.loginform)
-        if (res.data === 'None') return this.$message.error('登陆失败!')
-        this.$message.success('登陆成功！')
-        // console.log(res)
-        window.sessionStorage.setItem('token', res.data)
-        this.$router.push('/home')
+        try {
+          const res = await this.$http.post('api/user/login', this.loginform)
+          this.$message.success('登陆成功！')
+          console.log(res.data)
+          window.sessionStorage.setItem('token', res.data)
+          this.$router.push('/home')
+        } catch (error) {
+          if (error.response) {
+            if (error.response.status === 401) this.$message.error('帐号或者密码错误!')
+          }
+        } finally {
+
+        }
       })
     },
     register () {
@@ -84,12 +88,15 @@ export default {
 .login_container {
   background-color: #2b4b6b;
   height: 100%;
+  background-image: url('../assets/bg.jpg');
+  background-size: 100%;
+  background-repeat: no-repeat;
 }
 .login_box {
   width: 450px;
   height: 300px;
-  background-color: #fff;
-  border-radius: 3px;
+  background-color: #fff9;
+  border-radius: 40px;
   position: absolute;
   left: 50%;
   top: 50%;
