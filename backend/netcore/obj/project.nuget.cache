@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "ZXOFeNfn1JkWte730ZG1iw6YbQJpTH2Xes1M1AOCvX9XwJX2p0GdmepTnWIbzpTaMe4Ec9Dr6kduPbDEQHusgA==",
+  "dgSpecHash": "SptMJUlIuWUmI1MaKTIpE1qDvwc7CTGj5Jk7N4D+OVzeNyDLxTvmO7IePzqfMyc9ni1ucNALVYyGzlmUgnjy1A==",
   "success": true,
-  "projectFilePath": "/home/chikai/dotnet/mywork/mywork.csproj",
+  "projectFilePath": "/home/chikai/Downloads/vue_shop/backend/netcore/mywork.csproj",
   "expectedPackageFiles": [
     "/home/chikai/.nuget/packages/microsoft.aspnetcore.authentication/2.2.0/microsoft.aspnetcore.authentication.2.2.0.nupkg.sha512",
     "/home/chikai/.nuget/packages/microsoft.aspnetcore.authentication.abstractions/2.2.0/microsoft.aspnetcore.authentication.abstractions.2.2.0.nupkg.sha512",

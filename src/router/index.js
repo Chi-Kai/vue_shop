@@ -7,6 +7,7 @@ import welcome from '../components/welcome.vue'
 import user from '../components/users/user.vue'
 import shop from '../view/shophome.vue'
 import list from '../view/list.vue'
+import cart from '../view/cart.vue'
 import books from '../components/books/booklist.vue'
 Vue.use(VueRouter)
 
@@ -43,6 +44,11 @@ const routes = [
     component: list
   },
   {
+    path: '/cart',
+    name: 'cart',
+    component: cart
+  },
+  {
     path: '/shophome',
     name: 'shophome',
     component: shop
@@ -56,6 +62,7 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   if (to.path === '/shophome') return next()
   if (to.path === '/list') return next()
+  if (to.path === '/cart') return next()
   if (to.path === '/login') return next()
   if (to.path === '/register') return next()
   const token = window.sessionStorage.getItem('token')

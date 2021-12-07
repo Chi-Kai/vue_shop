@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/home/chikai/dotnet/mywork/mywork.csproj": {}
+    "/home/chikai/Downloads/vue_shop/backend/netcore/mywork.csproj": {}
   },
   "projects": {
-    "/home/chikai/dotnet/mywork/mywork.csproj": {
+    "/home/chikai/Downloads/vue_shop/backend/netcore/mywork.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/chikai/dotnet/mywork/mywork.csproj",
+        "projectUniqueName": "/home/chikai/Downloads/vue_shop/backend/netcore/mywork.csproj",
         "projectName": "mywork",
-        "projectPath": "/home/chikai/dotnet/mywork/mywork.csproj",
+        "projectPath": "/home/chikai/Downloads/vue_shop/backend/netcore/mywork.csproj",
         "packagesPath": "/home/chikai/.nuget/packages/",
-        "outputPath": "/home/chikai/dotnet/mywork/obj/",
+        "outputPath": "/home/chikai/Downloads/vue_shop/backend/netcore/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/chikai/.nuget/NuGet/NuGet.Config"

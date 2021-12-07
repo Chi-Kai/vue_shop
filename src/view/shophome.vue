@@ -6,14 +6,13 @@
                  mode="horizontal"
                  router>
           <el-submenu index="2">
-            <template slot="title"
-                      style="font-size=16px;">
-              海大书店
+            <template slot="title">
+              <span style="font-size:20px;font-weight: 1000;">海大书店</span>
             </template>
             <el-menu-item index="/list">
               排行榜
             </el-menu-item>
-            <el-menu-item index="2-2">
+            <el-menu-item index="/cart">
               购物车
             </el-menu-item>
             <el-submenu index="2-4">

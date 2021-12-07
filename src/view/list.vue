@@ -2,9 +2,31 @@
   <div class="list">
     <el-container>
       <el-header>
-        <h3 class="title">
-          海大书店
-        </h3>
+        <el-menu class="title"
+                 mode="horizontal"
+                 router>
+          <el-submenu index="2">
+            <template slot="title">
+              <span style="font-size:20px;font-weight: 1000;">海大书店</span>
+            </template>
+            <el-menu-item index="/list">
+              排行榜
+            </el-menu-item>
+            <el-menu-item index="/cart">
+              购物车
+            </el-menu-item>
+            <el-submenu index="2-4">
+              <template slot="title">
+                分类
+              </template>
+              <div v-for="item in type">
+                <el-menu-item>
+                  {{ item.type }}
+                </el-menu-item>
+              </div>
+            </el-submenu>
+          </el-submenu>
+        </el-menu>
         <div class="search">
           <el-input v-model="input"
                     style="width:300px"
@@ -13,10 +35,18 @@
                      icon="el-icon-search"
                      circle />
         </div>
-        <div class="login">
+        <div v-if="token==='true' || !token"
+             class="login">
           <el-link :underline="false"
                    @click="login">
             登录
+          </el-link>
+        </div>
+        <div v-if="token==='false'"
+             class="login">
+          <el-link :underline="false"
+                   @click="logout">
+            注销
           </el-link>
         </div>
         <div class="avatar">
@@ -24,10 +54,10 @@
         </div>
       </el-header>
       <el-main>
-        <div v-for="item in list"
-             :key="item.bookid"
-             class="main">
-          <div class="box">
+        <div class="main">
+          <div v-for="item in list"
+               :key="item.bookid"
+               class="box">
             <img :src="item.picture">
             <div class="pro">
               <span class="bname">{{ item.name }}</span>
@@ -37,7 +67,18 @@
 
               <span class="bprice">价格: {{ item.price }}</span>
               <el-button class="order"
-                         type="success">
+                         type="success"
+                         @click="$store.commit('unshiftShoppingCart',
+                                      {
+                                        id: item.name, // 购物车id
+                                        productID: '', // 商品id
+                                        productName: item.name, // 商品名称
+                                        productImg: item.picture, // 商品图片
+                                        price: item.price, // 商品价格
+                                        num: '', // 商品数量
+                                        maxNum: '', // 商品限购数量
+                                        check: false // 是否勾选
+                                      })">
                 加入购物车
               </el-button>
             </div>
@@ -62,11 +103,14 @@ export default {
       queryInfo: {
         pagesize: 8,
         pagenow: 1
-      }
+      },
+      type: []
     }
   },
   mounted () {
+    this.token = window.sessionStorage.getItem('token')
     this.getdata()
+    this.gettype()
   },
   methods: {
     async getdata () {
@@ -84,6 +128,10 @@ export default {
     handleCurrentChange (newPage) {
       this.queryInfo.pagenow = newPage
       this.getdata()
+    },
+    async gettype () {
+      const res = await this.$http.get('api/book/alltype')
+      this.type = res.data
     }
   }
 
@@ -110,7 +158,7 @@ export default {
 }
 
 .login {
-  margin-left: 1100px;
+  margin-left: 1050px;
   margin-top: 20px;
 }
 .avatar {
@@ -119,9 +167,10 @@ export default {
 }
 
 .main {
-  margin-top: 40px;
-  margin-left: 400px;
-  margin-right: 400px;
+  display: flex;
+  width: 1000px;
+  padding: 0 20%;
+  flex-wrap: wrap;
 }
 .box {
   margin-top: 60px;
@@ -134,7 +183,7 @@ img {
 .pro {
   display: flex;
   flex-direction: column;
-  margin-left: 200px;
+  margin-left: 100px;
 }
 
 .bname {
