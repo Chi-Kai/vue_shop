@@ -20,7 +20,7 @@
                 分类
               </template>
               <div v-for="item in type">
-                <el-menu-item>
+                <el-menu-item index="/">
                   {{ item.type }}
                 </el-menu-item>
               </div>
@@ -28,8 +28,7 @@
           </el-submenu>
         </el-menu>
         <div class="search">
-          <el-input v-model="input"
-                    style="width:300px"
+          <el-input style="width:300px"
                     placeholder="输入书籍名称" />
           <el-button type="primary"
                      icon="el-icon-search"
@@ -68,17 +67,7 @@
               <span class="bprice">价格: {{ item.price }}</span>
               <el-button class="order"
                          type="success"
-                         @click="$store.commit('unshiftShoppingCart',
-                                      {
-                                        id: item.name, // 购物车id
-                                        productID: '', // 商品id
-                                        productName: item.name, // 商品名称
-                                        productImg: item.picture, // 商品图片
-                                        price: item.price, // 商品价格
-                                        num: '', // 商品数量
-                                        maxNum: '', // 商品限购数量
-                                        check: false // 是否勾选
-                                      })">
+                         @click="add(item)">
                 加入购物车
               </el-button>
             </div>
@@ -96,6 +85,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   data () {
     return {
@@ -104,13 +94,15 @@ export default {
         pagesize: 8,
         pagenow: 1
       },
-      type: []
+      type: [],
+      token: ''
     }
   },
   mounted () {
     this.token = window.sessionStorage.getItem('token')
     this.getdata()
     this.gettype()
+    this.get()
   },
   methods: {
     async getdata () {
@@ -132,7 +124,41 @@ export default {
     async gettype () {
       const res = await this.$http.get('api/book/alltype')
       this.type = res.data
+    },
+    login () {
+      this.$router.push('/login')
+    },
+    logout () {
+      window.sessionStorage.clear()
+      this.$router.go(0)
+    },
+    ...mapGetters([
+      'getShoppingCart'
+    ]),
+    async add (item) {
+      this.$store.commit('unshiftShoppingCart',
+        {
+          productID: item.bookid, // 商品id
+          productName: item.name, // 商品名称
+          productImg: item.picture, // 商品图片
+          price: item.price, // 商品价格
+          maxNum: item.num,
+          num: 1, // 商品数量
+          check: false // 是否勾选
+        })
+      var data = {
+        id: window.sessionStorage.getItem('userid'),
+        cart: JSON.stringify(this.getShoppingCart())
+      }
+      console.log(this.getShoppingCart())
+      const res = await this.$http.post('/api/cart/alter', data)
+      console.log(res)
+    },
+    async get () {
+      const res = await this.$http.get('api/cart/find', { params: { id: window.sessionStorage.getItem('userid') } })
+      console.log(res)
     }
+
   }
 
 }
@@ -158,7 +184,7 @@ export default {
 }
 
 .login {
-  margin-left: 1050px;
+  margin-left: 1000px;
   margin-top: 20px;
 }
 .avatar {

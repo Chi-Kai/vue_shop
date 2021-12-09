@@ -6,7 +6,7 @@
                  mode="horizontal"
                  router>
           <el-submenu index="2">
-            <template slot="title">
+            <template slot="title" style="border-bottom-color:#f5f7fa">
               <span style="font-size:20px;font-weight: 1000;">海大书店</span>
             </template>
             <el-menu-item index="/list">
@@ -190,7 +190,7 @@ export default {
 }
 
 .login {
-  margin-left: 1050px;
+  margin-left: 1000px;
   margin-top: 20px;
 }
 .avatar {

@@ -29,24 +29,6 @@
             </template>
           </el-menu-item>
         </el-submenu>
-        <el-submenu index="2">
-          <template slot="title">
-            <i class="el-icon-s-cooperation" />
-            <span>权限管理</span>
-          </template>
-          <el-menu-item index="2-1">
-            <template slot="title">
-              <i class="el-icon-s-unfold" />
-              <span>角色列表</span>
-            </template>
-          </el-menu-item>
-          <el-menu-item index="2-2">
-            <template slot="title">
-              <i class="el-icon-s-unfold" />
-              <span>权限列表</span>
-            </template>
-          </el-menu-item>
-        </el-submenu>
         <el-submenu index="3">
           <template slot="title">
             <i class="el-icon-s-goods" />
@@ -58,13 +40,7 @@
               <span>书籍列表</span>
             </template>
           </el-menu-item>
-          <el-menu-item index="3-2">
-            <template slot="title">
-              <i class="el-icon-s-unfold" />
-              <span>分类参数</span>
-            </template>
-          </el-menu-item>
-          <el-menu-item index="3-3">
+          <el-menu-item index="/type">
             <template slot="title">
               <i class="el-icon-s-unfold" />
               <span>书籍分类</span>
@@ -153,7 +129,7 @@ export default {
   display: flex;
 }
 .user {
-  margin-left: 90rem;
+  margin-left: 88rem;
   display: flex;
   margin-top: 10px;
 }

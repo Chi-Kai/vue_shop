@@ -53,7 +53,7 @@
             <el-button type="success"
                        icon="el-icon-delete"
                        circle
-                       @click="deleteuser(scope.row.id)" />
+                       @click="deletebook(scope.row.bookid)" />
             <el-button type="warning"
                        icon="el-icon-setting"
                        circle />
@@ -63,7 +63,7 @@
       <el-pagination :current-page="queryInfo.pagenow"
                      :page-sizes="[1, 2, 4, 8,10]"
                      :page-size="queryInfo.pagesize"
-                     layout="total, sizes, prev, pager, next, jumper"
+                     layout="sizes, prev, pager, next, jumper"
                      :total="queryInfo.total"
                      @size-change="handleSizeChange"
                      @current-change="handleCurrentChange" />
@@ -118,19 +118,19 @@ export default {
       }
       this.$message.success('更新用户状态成功')
     },
-    // 删除用户
-    deleteuser (userid) {
-      this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
+    // 删除
+    deletebook (id) {
+      this.$confirm('此操作将删除此图书记录, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(async () => {
         // 报错await is a reserved word，是因为错把async放到deleteuser上，这里async和await是成对出现的，所以应该放在匿名函数的位置，加async的函数会被await阻塞，await会跳出async让出线程，
-        const res = await this.$http.post('api/user/delete', { id: userid })
+        const res = await this.$http.get('api/book/delete', { params: { id: id } })
         console.log(res)
-        if (res.status !== 200) return this.$message.error('删除用户失败!')
+        if (res.status !== 200) return this.$message.error('删除图书失败!')
         this.$message({ type: 'success', message: '删除成功!' })
-        this.getuserdata()
+        this.getdata()
       }).catch(() => {
         this.$message({
           type: 'info',
@@ -140,6 +140,7 @@ export default {
     },
     open () {
       this.$refs.form.$emit('open')
+      this.getdata()
     }
   }
 }

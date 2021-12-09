@@ -29,34 +29,106 @@ namespace MySQLSample.Controllers
 				 var list = _context.Book.FromSqlRaw("select * from books limit {0},{1}",page,size).ToList();
 			   return Ok(list);
 				}
-
-				[HttpGet]
-				public async Task <ActionResult<Booktype>> alltype () {
-             var list = _context.Booktype.FromSqlRaw("select * from booktype").ToList();
-			       return Ok(list);
-				}
-
+        
+				[HttpPost]
 				public async Task <ActionResult<Book>> add (Book item) {
           _context.Book.Add(item);
 		      await _context.SaveChangesAsync();
-		      return item; 
+		      return Ok(item.bookid);
+
 				}
 
+        [HttpPost]
 				public async Task <ActionResult<Book>> Alter (Book book)
 			 {
 				 var entity = _context.Book.FirstOrDefault(item => item.bookid == book.bookid);
 				 if (entity != null) {
-             entity = book;
+             entity.name = book.name;
+						 entity.isdn = book.isdn;
+						 entity.picture = book.picture;
+						 entity.press   = book.press;
+						 entity.price   = book.price;
+						 entity.sum = book.sum;
+						 entity.type = book.sum;
 						 _context.SaveChanges();
 						 return  Ok("alter succeed");
 				 }
 			   return BadRequest("cant find");
 			 }
        
-			 [HttpPost]
-			 public async Task <ActionResult<Book>> Delete (Book book)
+			 [HttpGet]
+			 public async Task <ActionResult<Book>> Delete (int id)
 			 {
-				 var entity = _context.Book.FirstOrDefault(item => item.bookid == book.bookid);
+				 var entity = _context.Book.FirstOrDefault(item => item.bookid == id);
+				 if (entity != null) {
+				  _context.Remove(entity);
+				  _context.SaveChanges();
+         return Ok("delete succeed");
+				  }
+				 return BadRequest("cant find");
+			 }
+       
+			 // 类型的CRUD
+			 [HttpGet]
+				public async Task <ActionResult<Booktype>> alltype () {
+             var list = _context.Booktype.FromSqlRaw("select * from booktype").ToList();
+			       return Ok(list);
+				}
+        [HttpPost]
+				public async Task <ActionResult<Booktype>> addtype (Booktype item) {
+          _context.Booktype.Add(item);
+		      await _context.SaveChangesAsync();
+		      return item; 
+				}
+				
+        [HttpPost]
+				public async Task <ActionResult<Booktype>> Altertype (Booktype book)
+			 {
+				 var entity = _context.Booktype.FirstOrDefault(item => item.typeid == book.typeid);
+				 if (entity != null) {
+             entity.type = book.type;
+						 _context.SaveChanges();
+						 return  Ok("alter succeed");
+				 }
+			   return BadRequest("cant find");
+			 }
+
+       [HttpGet]
+			 public async Task <ActionResult<Booktype>> Deletetype (int id)
+			 {
+				 var entity = _context.Booktype.FirstOrDefault(item => item.typeid == id);
+				 if (entity != null) {
+				  _context.Remove(entity);
+				  _context.SaveChanges();
+         return Ok("delete succeed");
+				  }
+				 return BadRequest("cant find");
+			 }
+
+			 // 简介的CRUD
+
+        [HttpPost]
+				public async Task <ActionResult<Bookitr>> additr (Bookitr item) {
+          _context.Bookitr.Add(item);
+		      await _context.SaveChangesAsync();
+		      return item; 
+				}
+				
+        [HttpPost]
+				public async Task <ActionResult<Bookitr>> Alteritr (Bookitr book)
+			 {
+				 var entity = _context.Bookitr.FirstOrDefault(item => item.bookid == book.bookid);
+				 if (entity != null) {
+             entity.introduce = book.introduce;
+						 _context.SaveChanges();
+						 return  Ok("alter succeed");
+				 }
+			   return BadRequest("cant find");
+			 }
+       [HttpGet]
+			 public async Task <ActionResult<Bookitr>> Deleteitr (int id)
+			 {
+				 var entity = _context.Bookitr.FirstOrDefault(item => item.bookid == id);
 				 if (entity != null) {
 				  _context.Remove(entity);
 				  _context.SaveChanges();

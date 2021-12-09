@@ -54,7 +54,7 @@ namespace MySQLSample.Controllers
                 if (computedHash[i] != user.password[i]) return Unauthorized("Invalid Password");
             }
 
-          return Ok(user.admin);
+          return Ok(user);
         }
         
 			[HttpGet]

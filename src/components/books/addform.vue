@@ -50,23 +50,39 @@
                      :label="item.type"
                      :value="item.type" />
         </el-select>
+        <el-input v-model="bookitr"
+                  type="textarea"
+                  :rows="10"
+                  style="min-height: 33px;
+                         margin-top: 20px;
+                         width: 532px;
+                         height: 212px;
+                         margin-left: 90px;"
+                  placeholder="请输入新书简介" />
       </div>
       <div v-if="active===2">
         <el-form ref="addFormRef"
                  class="add_form"
+                 style="height: 300px;"
                  :model="addform"
                  :rules="addrules">
-          <el-form-item prop="name">
+          <el-form-item prop="price">
             <el-input v-model="addform.price"
                       class="form_control"
                       prefix-icon=" el-icon-user-solid"
                       placeholder="价格" />
           </el-form-item>
-          <el-form-item prop="password">
+          <el-form-item prop="sum">
             <el-input v-model="addform.sum"
                       class="form_control"
                       prefix-icon=" el-icon-lock "
                       placeholder="数目" />
+          </el-form-item>
+          <el-form-item prop="picture">
+            <el-input v-model="addform.picture"
+                      class="form_control"
+                      prefix-icon=" el-icon-lock "
+                      placeholder="图片URL" />
           </el-form-item>
         </el-form>
       </div>
@@ -95,6 +111,7 @@ export default {
       // 控制消息窗
       adddialogVisible: false,
       editdialogVisible: false,
+      bookitr: '',
       // 添加的表单
       addform: {
         name: '',
@@ -103,7 +120,9 @@ export default {
         press: '',
         isdn: '',
         price: '',
-        sum: ''
+        sum: '',
+        picture: ''
+
       },
       type: []
     }
@@ -120,11 +139,13 @@ export default {
   methods: {
     async add () {
       const res = await this.$http.post('api/book/add', this.addform)
+      console.log(res)
+      await this.$http.post('api/book/additr', { bookid: res.data, introduce: this.bookitr })
       if (res.status !== 200) return this.$message.error('新增图书失败!')
       this.$message.success('新增图书成功！')
-      this.gettype()
       this.adddialogVisible = false
       this.active = 0
+      this.getdata()
     },
     async gettype () {
       const res = await this.$http.get('api/book/alltype')
@@ -148,6 +169,7 @@ export default {
     }
   }
 }
+
 </script>
 
 <style lang="less" scoped>

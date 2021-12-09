@@ -37,6 +37,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 export default {
   data () {
     return {
@@ -58,15 +59,22 @@ export default {
   },
 
   methods: {
+    ...mapActions(['setShoppingCart']),
     login () {
       this.$refs.loginFormRef.validate(async valid => {
         if (!valid) return
         try {
           const res = await this.$http.post('api/user/login', this.loginform)
           this.$message.success('登陆成功！')
-          console.log(res.data)
-          window.sessionStorage.setItem('token', res.data)
-          this.$router.push('/home')
+          window.sessionStorage.setItem('token', res.data.admin)
+          window.sessionStorage.setItem('userid', res.data.id)
+          if (res.data.admin === 'true') {
+            this.$router.push('/home')
+          }
+          const cart = await this.$http.get('api/cart/find', { params: { id: res.data.id } })
+          console.log(cart.data[0].cart)
+          this.setShoppingCart(JSON.parse(cart.data[0].cart))
+          this.$router.push('/shophome')
         } catch (error) {
           if (error.response) {
             if (error.response.status === 401) this.$message.error('帐号或者密码错误!')

@@ -9,6 +9,7 @@ import shop from '../view/shophome.vue'
 import list from '../view/list.vue'
 import cart from '../view/cart.vue'
 import books from '../components/books/booklist.vue'
+import type from '../components/books/type.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -34,6 +35,7 @@ const routes = [
     children: [
       { path: '/welcome', name: 'welcome', component: welcome },
       { path: '/user', name: 'user', component: user },
+      { path: '/type', name: 'type', component: type },
       { path: '/books', name: 'books', component: books }
     ]
   },

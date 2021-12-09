@@ -27,4 +27,13 @@ namespace MySQLSample.Models
 			public int typeid {get;set;}
 			public string? type {get;set;}
 	}
+
+	[Table("bookintroduce")]
+
+	public class Bookitr
+	{
+			[Key]
+			public int bookid {get;set;}
+			public string? introduce {get;set;}
+	}	
 }

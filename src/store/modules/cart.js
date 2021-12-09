@@ -92,13 +92,12 @@ export default {
       // 添加购物车
       // 用于在商品详情页点击添加购物车,后台添加成功后，更新vuex状态
       state.shoppingCart.unshift(data)
-      console.log(data)
     },
     updateShoppingCart (state, payload) {
       // 更新购物车
       // 可更新商品数量和是否勾选
       // 用于购物车点击勾选及加减商品数量
-      if (payload.prop == 'num') {
+      if (payload.prop === 'num') {
         // 判断效果的商品数量是否大于限购数量或小于1
         if (state.shoppingCart[payload.key].maxNum < payload.val) {
           return
@@ -115,7 +114,7 @@ export default {
       // 用于在商品详情页点击添加购物车,后台返回002，“该商品已在购物车，数量 +1”，更新vuex的商品数量
       for (let i = 0; i < state.shoppingCart.length; i++) {
         const temp = state.shoppingCart[i]
-        if (temp.productID == productID) {
+        if (temp.productID === productID) {
           if (temp.num < temp.maxNum) {
             temp.num++
           }
@@ -126,7 +125,7 @@ export default {
       // 根据购物车id删除购物车商品
       for (let i = 0; i < state.shoppingCart.length; i++) {
         const temp = state.shoppingCart[i]
-        if (temp.id == id) {
+        if (temp.productID === id) {
           state.shoppingCart.splice(i, 1)
         }
       }

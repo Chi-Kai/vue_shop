@@ -37,8 +37,7 @@
           </el-submenu>
         </el-menu>
         <div class="search">
-          <el-input v-model="input"
-                    style="width:300px"
+          <el-input style="width:300px"
                     placeholder="输入书籍名称" />
           <el-button type="primary"
                      icon="el-icon-search"
@@ -131,7 +130,7 @@
                   <div style="text-align: right; margin: 10px 0 0">
                     <el-button type="primary"
                                size="mini"
-                               @click="deleteItem($event,item.id,item.productID)">
+                               @click="deleteItem($event,item.productID)">
                       确定
                     </el-button>
                   </div>
@@ -191,24 +190,28 @@ import { mapActions, mapGetters } from 'vuex'
 
 export default {
   data () {
-    return { type: [] }
+    return { type: [], token: '' }
   },
   methods: {
-    ...mapActions(['updateShoppingCart', 'deleteShoppingCart', 'checkAll']),
+    ...mapActions(['updateShoppingCart', 'deleteShoppingCart', 'checkAll', 'setShoppingCart']),
     // 修改商品数量的时候调用该函数
     handleChange (currentValue, key, productID) {
       // 当修改数量时，默认勾选
       this.updateShoppingCart({ key: key, prop: 'check', val: true })
+      this.updateShoppingCart({
+        key: key,
+        prop: 'num',
+        val: currentValue
+      })
       // 向后端发起更新购物车的数据库信息请求
-      this.$axios
-        .post('/api/user/shoppingCart/updateShoppingCart', {
-          user_id: this.$store.getters.getUser.user_id,
-          product_id: productID,
-          num: currentValue
+      this.$http
+        .post('/api/cart/alter', {
+          id: window.sessionStorage.getItem('userid'),
+          cart: JSON.stringify(this.$store.getters.getShoppingCart)
         })
         .then(res => {
           switch (res.data.code) {
-            case '001':
+            case '200':
               // “001”代表更新成功
               // 更新vuex状态
               this.updateShoppingCart({
@@ -217,11 +220,19 @@ export default {
                 val: currentValue
               })
               // 提示更新成功信息
-              this.notifySucceed(res.data.msg)
+              this.$notify({
+                title: '成功',
+                message: '增添成功',
+                type: 'success'
+              })
               break
             default:
               // 提示更新失败信息
-              this.notifyError(res.data.msg)
+              this.$notify({
+                title: '失败',
+                message: '增添失败',
+                type: 'error'
+              })
           }
         })
         .catch(err => {
@@ -233,24 +244,25 @@ export default {
       this.updateShoppingCart({ key: key, prop: 'check', val: val })
     },
     // 向后端发起删除购物车的数据库信息请求
-    deleteItem (e, id, productID) {
-      this.$axios
-        .post('/api/user/shoppingCart/deleteShoppingCart', {
-          user_id: this.$store.getters.getUser.user_id,
-          product_id: productID
+    deleteItem (e, id) {
+      this.deleteShoppingCart(id)
+      this.$http
+        .post('/api/cart/alter', {
+          id: window.sessionStorage.getItem('userid'),
+          cart: JSON.stringify(this.$store.getters.getShoppingCart)
         })
         .then(res => {
-          switch (res.data.code) {
-            case '001':
+          console.log(res.data)
+          switch (res.data) {
+            case 'alter succeed':
               // “001” 删除成功
               // 更新vuex状态
               this.deleteShoppingCart(id)
               // 提示删除成功信息
-              this.notifySucceed(res.data.msg)
+
               break
             default:
-              // 提示删除失败信息
-              this.notifyError(res.data.msg)
+            // 提示删除失败信息
           }
         })
         .catch(err => {
@@ -260,11 +272,24 @@ export default {
     async gettype () {
       const res = await this.$http.get('api/book/alltype')
       this.type = res.data
+    },
+    login () {
+      this.$router.push('/login')
+    },
+    logout () {
+      window.sessionStorage.clear()
+      this.$router.go(0)
+    },
+    async init () {
+      this.gettype()
+      this.token = window.sessionStorage.getItem('token')
+      const id = window.sessionStorage.getItem('userid')
+      const cart = await this.$http.get('api/cart/find', { params: { id: id } })
+      this.setShoppingCart(JSON.parse(cart.data[0].cart))
     }
   },
   mounted () {
-    this.token = window.sessionStorage.getItem('token')
-    this.gettype()
+    this.init()
   },
   computed: {
     ...mapGetters([
@@ -504,7 +529,7 @@ export default {
 }
 
 .login {
-  margin-left: 1050px;
+  margin-left: 1000px;
   margin-top: 20px;
 }
 .avatar {
