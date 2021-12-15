@@ -2,7 +2,7 @@ import Vue from 'vue'
 import {
   Button, Form, FormItem, Input, Message, Container, Main, Aside, Header, Notification,
   Avatar, Menu, Submenu, MenuItem, Breadcrumb, BreadcrumbItem, Card, Row, Col,
-  Table, TableColumn, Radio, Switch, Pagination, Dialog, MessageBox, Carousel, CarouselItem, Link, Steps, Step, Select, Option, Checkbox, InputNumber, Popover, Upload
+  Table, TableColumn, Radio, Switch, Pagination, Dialog, MessageBox, Carousel, CarouselItem, Link, Steps, Step, Select, Option, Checkbox, InputNumber, Popover, Upload, Tag
 } from 'element-ui'
 
 Vue.use(Button)
@@ -40,6 +40,7 @@ Vue.use(Checkbox)
 Vue.use(InputNumber)
 Vue.use(Popover)
 Vue.use(Upload)
-Vue.prototype$notify = Notification
+Vue.use(Tag)
+Vue.prototype.$notify = Notification
 Vue.prototype.$message = Message
 Vue.prototype.$confirm = MessageBox.confirm

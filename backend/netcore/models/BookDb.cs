@@ -36,4 +36,9 @@ namespace MySQLSample.Models
 			public int bookid {get;set;}
 			public string? introduce {get;set;}
 	}	
+
+	public class Booknum
+	{
+		public int num {get;set;}
+	} 
 }

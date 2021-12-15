@@ -6,7 +6,7 @@
                  mode="horizontal"
                  router>
           <el-submenu index="2">
-            <template slot="title" style="border-bottom-color:#f5f7fa">
+            <template slot="title">
               <span style="font-size:20px;font-weight: 1000;">海大书店</span>
             </template>
             <el-menu-item index="/list">
@@ -21,7 +21,9 @@
               </template>
               <div v-for="item in type">
                 <el-menu-item>
-                  {{ item.type }}
+                  <router-link :to="{name:'types',params:{id:item.type}}">
+                    {{ item.type }}
+                  </router-link>
                 </el-menu-item>
               </div>
             </el-submenu>
@@ -30,10 +32,13 @@
         <div class="search">
           <el-input v-model="input"
                     style="width:300px"
-                    placeholder="输入书籍名称" />
+                    placeholder="输入书籍名称"
+                    clearable
+                    @clear="input=''" />
           <el-button type="primary"
                      icon="el-icon-search"
-                     circle />
+                     circle
+                     @click="getbookdata" />
         </div>
         <div v-if="token==='true' || !token"
              class="login">
@@ -72,10 +77,10 @@
             </el-header>
             <el-main>
               <div class="hot">
-                <img src="../assets/shop/1.jpg">
-                <img src="../assets/shop/2.jpg">
-                <img src="../assets/shop/3.jpg">
-                <img src="../assets/shop/4.jpg">
+                <img src="http://img3m3.ddimg.cn/14/18/29294213-1_l_8.jpg">
+                <img src="http://img3m2.ddimg.cn/25/19/29239972-1_l_12.jpg">
+                <img src="http://img3m8.ddimg.cn/25/27/29278978-1_l_1448.jpg">
+                <img src="http://img3m8.ddimg.cn/90/13/29314188-1_l_11.jpg">
               </div>
             </el-main>
           </el-container>
@@ -85,10 +90,10 @@
             </el-header>
             <el-main>
               <div class="hot">
-                <img src="../assets/shop/1.jpg">
-                <img src="../assets/shop/2.jpg">
-                <img src="../assets/shop/3.jpg">
-                <img src="../assets/shop/4.jpg">
+                <img src="http://img3m9.ddimg.cn/93/8/25092039-1_l_4.jpg">
+                <img src="http://img3m5.ddimg.cn/51/34/26921715-1_l_8.jpg">
+                <img src="http://img3m2.ddimg.cn/0/27/28473192-1_l_11.jpg">
+                <img src="http://img3m5.ddimg.cn/98/7/23445575-1_l_10.jpg">
               </div>
             </el-main>
           </el-container>
@@ -98,10 +103,10 @@
             </el-header>
             <el-main>
               <div class="hot">
-                <img src="../assets/shop/1.jpg">
-                <img src="../assets/shop/2.jpg">
-                <img src="../assets/shop/3.jpg">
-                <img src="../assets/shop/4.jpg">
+                <img src="http://img3m2.ddimg.cn/14/2/28509242-1_l_14.jpg">
+                <img src="http://img3m1.ddimg.cn/38/0/29267111-1_l_6.jpg">
+                <img src="http://img3m6.ddimg.cn/23/11/29296796-1_l_12.jpg">
+                <img src="http://img3m0.ddimg.cn/29/31/28971290-1_l_3.jpg">
               </div>
             </el-main>
           </el-container>
@@ -111,10 +116,10 @@
             </el-header>
             <el-main>
               <div class="hot">
-                <img src="../assets/shop/1.jpg">
-                <img src="../assets/shop/2.jpg">
-                <img src="../assets/shop/3.jpg">
-                <img src="../assets/shop/4.jpg">
+                <img src="http://img3m7.ddimg.cn/60/27/29316237-1_b_13.jpg">
+                <img src="http://img3m8.ddimg.cn/56/24/29301878-1_b_3.jpg">
+                <img src="http://img3m9.ddimg.cn/41/3/29322059-1_b_27.jpg">
+                <img src="http://img3m0.ddimg.cn/42/4/29322060-1_b_15.jpg">
               </div>
             </el-main>
           </el-container>
@@ -128,24 +133,25 @@
 export default {
   data () {
     return {
+      input: '',
       type: [],
       token: '',
       imgs: [
         {
           id: '1',
-          url: 'https://puui.qpic.cn/vcover_hz_pic/0/o8mbrpo92gni5uc1614137102933/0'
+          url: 'http://img62.ddimg.cn/upload_img/00838/cxtc/750x315_1210-1639460166.jpg'
         },
         {
           id: '2',
-          url: 'https://puui.qpic.cn/vcover_hz_pic/0/mzc002004jql6911612779226790/0'
+          url: 'http://img60.ddimg.cn/upload_img/00877/202111/750x315-1637735923.jpg'
         },
         {
           id: '3',
-          url: 'https://puui.qpic.cn/vcover_hz_pic/0/mzc002004660qpk1610075881185/0'
+          url: 'http://img61.ddimg.cn/cuxiao/1215cx750-315.jpg'
         },
         {
           id: '4',
-          url: 'https://puui.qpic.cn/vcover_hz_pic/0/mzc00200x9fxrc91603793682527/0'
+          url: 'http://img57.ddimg.cn/9002820235646047.jpg'
         }
       ]
 
@@ -156,6 +162,13 @@ export default {
     this.gettype()
   },
   methods: {
+    async getbookdata () {
+      const users = await this.$http.get('api/book/find', { params: { name: this.input } })
+      if (users.data.length === 0) return this.$message.error('查无此书')
+      console.log(users.data)
+      this.$router.push({ path: `/goods/${users.data[0].bookid}` })
+      // this.booklist = users.data
+    },
     login () {
       this.$router.push('/login')
     },
@@ -170,7 +183,11 @@ export default {
   }
 }
 </script>
-<style lang="less" scoped>
+<style scoped>
+.el-submenu__title {
+  border-bottom: 2px solid #ebeef5 !important;
+  color: #303133;
+}
 .el-header {
   display: flex;
 }

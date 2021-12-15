@@ -14,10 +14,10 @@
                     placeholder="请输入书籍名称"
                     class="input-with-select"
                     clearable
-                    @clear="getuserdata">
+                    @clear="queryInfo.query=''">
             <el-button slot="append"
                        icon="el-icon-search"
-                       @click="getuserdata" />
+                       @click="getbookdata" />
           </el-input>
         </el-col>
         <el-col :span="4">
@@ -84,6 +84,7 @@ export default {
       booklist: [],
       // 请求的信息
       queryInfo: {
+        query: '',
         pagesize: 8,
         total: 0,
         pagenow: 1
@@ -98,8 +99,11 @@ export default {
       const users = await this.$http.get('api/book/list', { params: { s: this.queryInfo.pagesize, p: this.queryInfo.pagenow } })
       if (users.status !== 200) return this.$message.error('获取图书数据失败')
       this.booklist = users.data
-      this.queryInfo.total = parseInt(users.headers.total)
-      // console.log(users)
+    },
+    async getbookdata () {
+      const users = await this.$http.get('api/book/find', { params: { name: this.queryInfo.query } })
+      if (users.status !== 200) return this.$message.error('查无此书')
+      this.booklist = users.data
     },
     handleSizeChange (newSize) {
       this.queryInfo.pagesize = newSize

@@ -1,11 +1,3 @@
-<!--
- * @Description: 我的购物车页面组件
- * @Author: hai-27
- * @Date: 2020-02-20 01:55:47
- * @LastEditors: hai-27
- * @LastEditTime: 2020-02-27 13:36:42
- -->
-
 <template>
   <div class="shoppingCart">
     <el-container>
@@ -30,18 +22,25 @@
               </template>
               <div v-for="item in type">
                 <el-menu-item>
-                  {{ item.type }}
+                  <router-link :to="{name:'types',params:{id:item.type}}">
+                    {{ item.type }}
+                  </router-link>
                 </el-menu-item>
               </div>
             </el-submenu>
           </el-submenu>
         </el-menu>
         <div class="search">
-          <el-input style="width:300px"
-                    placeholder="输入书籍名称" />
+          <el-input v-model="input"
+                    style="width:300px"
+                    placeholder="输入书籍名称"
+                    clearable
+                    @clear="input=''" />
           <el-button type="primary"
                      icon="el-icon-search"
-                     circle />
+                     style="height: 44.1036px;"
+                     circle
+                     @click="getbookdata" />
         </div>
         <div v-if="token==='true' || !token"
              class="login">
@@ -62,7 +61,7 @@
         </div>
       </el-header>
       <!-- 购物车头部END -->
-      <el-main>
+      <el-main style="height: 880px;">
         <!-- 购物车主要内容区 -->
         <div v-if="getShoppingCart.length>0"
              class="content">
@@ -147,7 +146,7 @@
           <div class="cart-bar">
             <div class="cart-bar-left">
               <span>
-                <router-link to="/goods">继续购物</router-link>
+                <router-link to="/shophome">继续购物</router-link>
               </span>
               <span class="sep">|</span>
               <span class="cart-total">
@@ -161,7 +160,7 @@
                 <span class="total-price-title">合计：</span>
                 <span class="total-price">{{ getTotalPrice }}元</span>
               </span>
-              <router-link :to="getCheckNum > 0 ? '/confirmOrder' : ''">
+              <router-link :to="getCheckNum > 0 ? '/orderback' : ''">
                 <div :class="getCheckNum > 0 ? 'btn-primary' : 'btn-primary-disabled'">
                   去结算
                 </div>
@@ -190,7 +189,7 @@ import { mapActions, mapGetters } from 'vuex'
 
 export default {
   data () {
-    return { type: [], token: '' }
+    return { type: [], token: '', input: '' }
   },
   methods: {
     ...mapActions(['updateShoppingCart', 'deleteShoppingCart', 'checkAll', 'setShoppingCart']),
@@ -210,10 +209,11 @@ export default {
           cart: JSON.stringify(this.$store.getters.getShoppingCart)
         })
         .then(res => {
-          switch (res.data.code) {
-            case '200':
+          switch (res.status) {
+            case 200:
               // “001”代表更新成功
               // 更新vuex状态
+
               this.updateShoppingCart({
                 key: key,
                 prop: 'num',
@@ -222,7 +222,7 @@ export default {
               // 提示更新成功信息
               this.$notify({
                 title: '成功',
-                message: '增添成功',
+                message: '修改成功',
                 type: 'success'
               })
               break
@@ -238,6 +238,13 @@ export default {
         .catch(err => {
           return Promise.reject(err)
         })
+    },
+    async getbookdata () {
+      const users = await this.$http.get('api/book/find', { params: { name: this.input } })
+      if (users.data.length === 0) return this.$message.error('查无此书')
+      console.log(users.data)
+      this.$router.push({ path: `/goods/${users.data[0].bookid}` })
+      // this.booklist = users.data
     },
     checkChange (val, key) {
       // 更新vuex中购物车商品是否勾选的状态
@@ -311,7 +318,7 @@ export default {
 </script>
 <style scoped>
 .shoppingCart {
-  background-color: #f5f5f5;
+  //background-color: ;
   padding-bottom: 20px;
 }
 /* 购物车头部CSS */
@@ -352,7 +359,7 @@ export default {
 }
 
 .shoppingCart .content ul {
-  background-color: #fff;
+  background-color: #dce6e1;
   color: #424242;
   line-height: 85px;
 }
@@ -365,7 +372,7 @@ export default {
 .shoppingCart .content ul .product-list {
   height: 85px;
   padding: 15px 26px 15px 0;
-  border-top: 1px solid #e0e0e0;
+  border-top: 1px solid #dcdfe6;
 }
 .shoppingCart .content ul .pro-check {
   float: left;
@@ -520,7 +527,7 @@ export default {
   display: grid;
   grid-template-columns: 1fr 40px;
   grid-gap: 30px;
-  margin-top: 20px;
+  margin-top: 10px;
 }
 .el-button {
 }
@@ -535,6 +542,9 @@ export default {
 .avatar {
   margin-top: 10px;
   margin-left: 30px;
+}
+.el-main {
+  background-image: url('https://img1.baidu.com/it/u=4008283812,3796308956&fm=26&fmt=auto');
 }
 /* 购物车为空的时候显示的内容CSS END */
 </style>

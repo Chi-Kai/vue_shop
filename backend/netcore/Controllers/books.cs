@@ -29,13 +29,19 @@ namespace MySQLSample.Controllers
 				 var list = _context.Book.FromSqlRaw("select * from books limit {0},{1}",page,size).ToList();
 			   return Ok(list);
 				}
+
+				[HttpGet]
+				public async Task <ActionResult<Booknum>> booknum ()
+		    {
+				 var list = _context.Booknum.FromSqlRaw("SELECT SUM(CAST(`sum` as UNSIGNED INTEGER)) as num from books;").ToList();
+			   return Ok(list);
+				}
         
 				[HttpPost]
 				public async Task <ActionResult<Book>> add (Book item) {
           _context.Book.Add(item);
 		      await _context.SaveChangesAsync();
 		      return Ok(item.bookid);
-
 				}
 
         [HttpPost]
@@ -67,11 +73,51 @@ namespace MySQLSample.Controllers
 				  }
 				 return BadRequest("cant find");
 			 }
+
+			 [HttpGet]
+			 public async Task <ActionResult<Book>> Find (string name)
+			 {
+				 var book = _context.Book.FromSqlRaw("select * from books where name = {0}",name).ToList(); //这是直接替换，不用加单引号，插入加单引号是识别为字符串
+				 return Ok(book);
+			 }
+			 [HttpGet]
+			public async Task <ActionResult<Book>> Findbytype (string name)
+			 {
+				 var book = _context.Book.FromSqlRaw("select * from books where type = {0}",name).ToList(); //这是直接替换，不用加单引号，插入加单引号是识别为字符串
+				 return Ok(book);
+			 }
+			 			 [HttpGet]
+			 public async Task <ActionResult<Book>> Findbyid (int id)
+			 {
+				 var book = _context.Book.FromSqlRaw("select * from books where bookid = {0}",id).ToList(); //这是直接替换，不用加单引号，插入加单引号是识别为字符串
+				 return Ok(book);
+			 }
+       [HttpGet]
+			 public async Task <ActionResult<Booknum>> Num ()
+			 {
+				 var book = _context.Booknum.FromSqlRaw("call book_num()").ToList(); //这是直接替换，不用加单引号，插入加单引号是识别为字符串
+				 return Ok(book);
+			 }
        
+			[HttpGet]
+			 public async Task <ActionResult<Book>> Groupnum ()
+			 {
+				 var query = from b in _context.Set<Book>()
+                     group b by b.type
+                     into g
+                     select new { g.Key, Count = g.Count() };
+				 var book = query.ToList();
+				 return Ok(book);
+			 }
 			 // 类型的CRUD
 			 [HttpGet]
 				public async Task <ActionResult<Booktype>> alltype () {
              var list = _context.Booktype.FromSqlRaw("select * from booktype").ToList();
+			       return Ok(list);
+				}
+							 [HttpGet]
+				public async Task <ActionResult<Booktype>> typenum () {
+             var list = _context.Booktype.FromSqlRaw("call type_num()").First();
 			       return Ok(list);
 				}
         [HttpPost]
@@ -113,7 +159,11 @@ namespace MySQLSample.Controllers
 		      await _context.SaveChangesAsync();
 		      return item; 
 				}
-				
+			  public async Task <ActionResult<Bookitr>> Finditrbyid (int id)
+			 {
+				 var book = _context.Bookitr.FromSqlRaw("select * from bookintroduce where bookid = {0}",id).ToList(); //这是直接替换，不用加单引号，插入加单引号是识别为字符串
+				 return Ok(book);
+			 }
         [HttpPost]
 				public async Task <ActionResult<Bookitr>> Alteritr (Bookitr book)
 			 {

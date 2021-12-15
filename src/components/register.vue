@@ -87,9 +87,9 @@ export default {
         this.$message.success('登陆成功！')
        */
         const res = await this.$http.post('api/user/register', this.loginform)
-        if (res.data === 'None') return this.$message.error('注册失败!')
+        const cart = await this.$http.get('api/cart/add', { params: { id: res.data.id } })
+        if (res.data === 'None' && cart.data === 'add cart') return this.$message.error('注册失败!')
         this.$message.success('注册成功！')
-        // console.log(res)
         this.$router.push('/login')
       })
     }

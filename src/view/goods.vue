@@ -1,5 +1,5 @@
 <template>
-  <div class="list">
+  <div class="goods">
     <el-container>
       <el-header>
         <el-menu class="title"
@@ -60,36 +60,31 @@
         </div>
       </el-header>
       <el-main>
-        <div class="main-list">
-          <div v-for="item in list"
-               :key="item.bookid"
-               class="main">
-            <div class="box">
-              <router-link :to="{name:'goods',params:{id:item.bookid}}">
-                <img :src="item.picture">
-              </router-link>
+        <div class=" goods-main">
+          <div class="box">
+            <div class="box2">
+              <img :src="data[0].picture"
+                   style="width: 400px;">
               <div class="pro">
-                <span class="bname">{{ item.name }}</span>
-
-                <span class="bautor">作者: {{ item.autor }}</span>
-                <span class="bpress">出版社: {{ item.press }}</span>
-
-                <span class="bprice">价格: {{ item.price }}</span>
-                <el-button class="order"
-                           type="success"
-                           @click="add(item)">
-                  加入购物车
-                </el-button>
+                <span class="bname">{{ data[0].name }}</span>
+                <span class="bautor">作者: {{ data[0].autor }}</span>
+                <span class="bautor">出版社: {{ data[0].press }}</span>
+                <span class="bautor">ISBN: {{ data[0].isdn }}</span>
+                <span class="bautor">价格: {{ data[0].price }}</span>
+                <span class="bautor">类型: {{ data[0].type }}</span>
               </div>
             </div>
+            <p class="detail">
+              {{ detial }}
+            </p>
+            <el-button class="order"
+                       type="success"
+                       style="margin-left:350px;margin-bottom:40px"
+                       @click="add(data[0])">
+              加入购物车
+            </el-button>
           </div>
         </div>
-        <el-pagination :current-page="queryInfo.pagenow"
-                       :page-sizes="[5,10,20,30,50]"
-                       :page-size="queryInfo.pagesize"
-                       layout="total, sizes, prev, pager, next, jumper"
-                       @size-change="handleSizeChange"
-                       @current-change="handleCurrentChange" />
       </el-main>
     </el-container>
   </div>
@@ -100,23 +95,24 @@ import { mapGetters } from 'vuex'
 export default {
   data () {
     return {
-      list: [],
-      queryInfo: {
-        pagesize: 10,
-        pagenow: 1
-      },
+      id: '',
       type: [],
       token: '',
+      data: [],
+      detial: '',
       input: ''
     }
   },
   mounted () {
     this.token = window.sessionStorage.getItem('token')
-    this.getdata()
     this.gettype()
-    this.get()
+    this.id = this.$route.params.id
+    this.getdata()
   },
   methods: {
+    ...mapGetters([
+      'getShoppingCart'
+    ]),
     async getbookdata () {
       const users = await this.$http.get('api/book/find', { params: { name: this.input } })
       if (users.data.length === 0) return this.$message.error('查无此书')
@@ -124,36 +120,6 @@ export default {
       this.$router.push({ path: `/goods/${users.data[0].bookid}` })
       // this.booklist = users.data
     },
-    async getdata () {
-      const users = await this.$http.get('api/book/list', { params: { s: this.queryInfo.pagesize, p: this.queryInfo.pagenow } })
-      if (users.status !== 200) return this.$message.error('获取图书数据失败')
-      this.list = users.data
-      // console.log(this.list)
-      // this.queryInfo.total = parseInt(users.headers.total)
-      // console.log(users)
-    },
-    handleSizeChange (newSize) {
-      this.queryInfo.pagesize = newSize
-      this.getdata()
-    },
-    handleCurrentChange (newPage) {
-      this.queryInfo.pagenow = newPage
-      this.getdata()
-    },
-    async gettype () {
-      const res = await this.$http.get('api/book/alltype')
-      this.type = res.data
-    },
-    login () {
-      this.$router.push('/login')
-    },
-    logout () {
-      window.sessionStorage.clear()
-      this.$router.go(0)
-    },
-    ...mapGetters([
-      'getShoppingCart'
-    ]),
     async add (item) {
       if (this.token === 'true' || !this.token) { return this.$router.push('/login') }
       this.$store.commit('unshiftShoppingCart',
@@ -166,7 +132,6 @@ export default {
           num: 1, // 商品数量
           check: false // 是否勾选
         })
-
       var data = {
         id: window.sessionStorage.getItem('userid'),
         cart: JSON.stringify(this.getShoppingCart())
@@ -185,14 +150,27 @@ export default {
           message: '加入购物车失败'
         })
       }
+      this.$router.push('/shophome')
     },
-    async get () {
-      const res = await this.$http.get('api/cart/find', { params: { id: window.sessionStorage.getItem('userid') } })
-      console.log(res)
+    async gettype () {
+      const res = await this.$http.get('api/book/alltype')
+      this.type = res.data
+    },
+    login () {
+      this.$router.push('/login')
+    },
+    logout () {
+      window.sessionStorage.clear()
+      this.$router.go(0)
+    },
+    async getdata () {
+      const res = await this.$http.get('api/book/findbyid', { params: { id: this.id } })
+      const itr = await this.$http.get('api/book/finditrbyid', { params: { id: this.id } })
+      this.data = res.data
+      this.detial = itr.data[0].introduce
+      // console.log(this.data)
     }
-
   }
-
 }
 </script>
 
@@ -224,50 +202,56 @@ export default {
   margin-left: 30px;
 }
 .el-main {
-  background-image: url('https://img1.baidu.com/it/u=1104741512,1892509565&fm=26&fmt=auto');
+  background-image: url('https://img1.baidu.com/it/u=184764084,4011140230&fm=26&fmt=auto');
 }
-.main {
-  margin-top: 40px;
-  margin-left: 200px;
+.goods-main {
+  border-radius: 40px;
+  background-color: #f0f8ffd4;
+  margin-left: 400px;
   margin-right: 400px;
 }
 .box {
   margin-top: 60px;
   display: flex;
+  flex-direction: column;
 }
 img {
   max-height: 400px;
   max-width: 400px;
-}
-.main-list {
+  margin-left: 30px;
   margin-top: 20px;
+}
+.bname {
+  font-size: 30px;
+  margin-bottom: 30px;
+  font-style: italic;
+  color: rgb(61, 81, 197);
+}
+.bautor {
+  margin-bottom: 30px;
+  font-size: 22px;
+}
+.detail {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  font-size: 16px;
+  text-indent: 2em;
+  line-height: 3em;
+  letter-spacing: 5px;
+}
+.order {
+  width: 300px;
+  margin-bottom: 50px;
   margin-left: 400px;
-  margin-right: 400px;
-  border-radius: 40px;
-  background-color: #f0f8ffd4;
 }
 .pro {
   display: flex;
   flex-direction: column;
-  margin-left: 100px;
-}
 
-.bname {
-  font-size: 30px;
-  margin-bottom: 10px;
+  margin-top: 50px;
+  margin-left: 200px;
 }
-.bautor {
-  margin-bottom: 10px;
-}
-.bprice {
-  margin-top: 10px;
-  margin-bottom: 20px;
-}
-.order {
-  width: 150px;
-}
-.el-pagination {
-  margin-top: 60px;
-  margin-left: 700px;
+.box2 {
+  display: flex;
 }
 </style>

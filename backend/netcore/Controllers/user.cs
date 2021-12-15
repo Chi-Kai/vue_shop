@@ -122,6 +122,19 @@ namespace MySQLSample.Controllers
 			 {
 				 var user = _context.User.FromSqlRaw("select * from user where username = {0}",username).ToList(); //这是直接替换，不用加单引号，插入加单引号是识别为字符串
 				 return Ok(user);
+ 			 }
+			 [HttpGet]
+			 public async Task <ActionResult<Booknum>> adminnum ()
+			 {
+         var user = _context.Booknum.FromSqlRaw("select count(*) as num from user where admin='true'").ToList();
+				 return Ok(user);
+			 }
+
+			 [HttpGet]
+			 public async Task <ActionResult<Booknum>> usernum ()
+			 {
+         var user = _context.Booknum.FromSqlRaw("select count(*) as num from user where admin='false'").ToList();
+				 return Ok(user);
 			 }
 			 private async Task<bool> UserExists(string username)
        {

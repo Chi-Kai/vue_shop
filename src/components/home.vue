@@ -5,7 +5,7 @@
                  class="aside_head"
                  height="60px">
         <div class="title">
-          <strong> BackStage ManageMent</strong>
+          <strong>后台管理</strong>
         </div>
       </el-header>
       <el-menu default-active="2"
@@ -52,7 +52,7 @@
             <i class="el-icon-s-order" />
             <span>订单管理</span>
           </template>
-          <el-menu-item index="4-1">
+          <el-menu-item index="/order">
             <template slot="title">
               <i class="el-icon-s-unfold" />
               <span>订单列表</span>
@@ -64,10 +64,10 @@
             <i class="el-icon-s-marketing" />
             <span>数据统计</span>
           </template>
-          <el-menu-item index="5-1">
+          <el-menu-item index="/welcome">
             <template slot="title">
               <i class="el-icon-location" />
-              <span>选项1</span>
+              <span>数据统计</span>
             </template>
           </el-menu-item>
         </el-submenu>

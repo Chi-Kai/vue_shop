@@ -49,7 +49,7 @@ export default {
       loginrules: {
         username: [
           { required: true, message: '请输入用户名', trigger: 'blur' },
-          { min: 3, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+          { min: 1, message: '长度在 1 到 5 个字符', trigger: 'blur' }
         ],
         password: [
           { min: 3, max: 10, message: '长度在 6 到 10 个字符', trigger: 'blur' }
@@ -65,9 +65,11 @@ export default {
         if (!valid) return
         try {
           const res = await this.$http.post('api/user/login', this.loginform)
+          console.log(res)
           this.$message.success('登陆成功！')
           window.sessionStorage.setItem('token', res.data.admin)
           window.sessionStorage.setItem('userid', res.data.id)
+          console.log("1")
           if (res.data.admin === 'true') {
             this.$router.push('/home')
           }

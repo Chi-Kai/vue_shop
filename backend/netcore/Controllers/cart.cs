@@ -23,16 +23,19 @@ namespace MySQLSample.Controllers
 				public async Task <ActionResult<Cart>> Find (int id)
 		    { 
 				 var list = _context.Cart.FromSqlRaw("select * from cart where id={0}",id).ToList();
-			   if (list == null) {
-				    var n = new Cart {
+				 return Ok(list);
+				}
+        [HttpGet]
+				public async Task <ActionResult<Cart>> Add (int id)
+        {
+           var n = new Cart {
               id = id,
 							cart = "[]"
 						}; 
 						_context.Cart.Add(n);
-				 }
-				 return Ok(list);
+						_context.SaveChanges();
+						return Ok("add cart");
 				}
-
 				public async Task <ActionResult<Cart>> Alter (Cart itm)
 			 {
 				 var entity = _context.Cart.FirstOrDefault(item => item.id == itm.id);

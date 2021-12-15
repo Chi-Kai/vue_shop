@@ -7,7 +7,9 @@
                  router>
           <el-submenu index="2">
             <template slot="title">
-              <span style="font-size:20px;font-weight: 1000;">海大书店</span>
+              <span style="font-size:20px;font-weight: 1000;">
+                海大书店
+              </span>
             </template>
             <el-menu-item index="/list">
               排行榜
@@ -59,7 +61,7 @@
           <el-avatar icon="el-icon-user-solid" />
         </div>
       </el-header>
-      <el-main>
+      <el-main style="height: 880px;">
         <div class="main-list">
           <div v-for="item in list"
                :key="item.bookid"
@@ -107,14 +109,15 @@ export default {
       },
       type: [],
       token: '',
-      input: ''
+      input: '',
+      id: ''
     }
   },
   mounted () {
     this.token = window.sessionStorage.getItem('token')
+    this.id = this.$route.params.id
     this.getdata()
     this.gettype()
-    this.get()
   },
   methods: {
     async getbookdata () {
@@ -124,13 +127,12 @@ export default {
       this.$router.push({ path: `/goods/${users.data[0].bookid}` })
       // this.booklist = users.data
     },
+
     async getdata () {
-      const users = await this.$http.get('api/book/list', { params: { s: this.queryInfo.pagesize, p: this.queryInfo.pagenow } })
-      if (users.status !== 200) return this.$message.error('获取图书数据失败')
-      this.list = users.data
-      // console.log(this.list)
-      // this.queryInfo.total = parseInt(users.headers.total)
-      // console.log(users)
+      console.log(this.id)
+      const res = await this.$http.get('api/book/findbytype', { params: { name: this.id } })
+      this.list = res.data
+      console.log(this.data)
     },
     handleSizeChange (newSize) {
       this.queryInfo.pagesize = newSize
@@ -185,10 +187,6 @@ export default {
           message: '加入购物车失败'
         })
       }
-    },
-    async get () {
-      const res = await this.$http.get('api/cart/find', { params: { id: window.sessionStorage.getItem('userid') } })
-      console.log(res)
     }
 
   }
