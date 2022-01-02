@@ -8,3 +8,8 @@
 
 先启动后端backend （通过start.sh脚本启动） 
 前端启动命令 npm run serve
+
+数据库使用docker 
+```
+docker pull chikai0307/mywork:1.0
+```
